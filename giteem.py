@@ -8,6 +8,8 @@
 # Pattern was then altered by me to look a bit easier to read while I'm developing
 
 import json
+from datetime import datetime, timedelta
+import itertools
 
 GITHUB_BASE = "https://github.com"
 JSON_FILE = "giteem-pattern.json"
@@ -44,4 +46,51 @@ def checkChar(ch):
     elif ch == '|':
         return 1
 
-parseJsonPattern()
+def parseYear():
+    # todo: input validation
+    print("Enter a year that's good for getting people")
+    print("""
+                        Note: this is a full-width calendar affair, so a year where you don't have a ton of commits 
+                        (or any) would probably work best.
+                    """)
+    yearStr = input("->> ")
+
+    int_year_valid = int(yearStr) > 0 and int(yearStr) <= datetime.now().year
+    while not yearStr.isnumeric() and not int_year_valid:
+        print("Nope that doesn't look like a valid year to me. Let's try that again.")
+        print("Enter a year that's good for getting people")
+        print("""
+                    Note: this is a full-width calendar affair, so a year where you don't have a ton of commits 
+                    (or any) would probably work best.
+                """)
+        yearStr = input("->> ")
+
+    return int(yearStr)
+
+def find_first_sunday(year):
+    date = datetime(year, 1, 1, 9)
+    weekday = datetime.weekday(date)
+
+    while weekday < 6:
+        date = date + timedelta(1)
+        weekday = datetime.weekday(date)
+
+    return date
+
+def get_repo_name():
+    # todo: input validation for invalid names
+    return input("Enter the name for the dummy repo: ")
+
+def get_github_name():
+    # todo: input validation
+    return input("Enter your github username: ")
+
+
+if __name__ == '__main__':
+    print("Lets GIT this bread")
+
+    year = parseYear()
+    start_date = find_first_sunday(year)
+    repo_name = get_repo_name()
+    username = get_github_name()
+
